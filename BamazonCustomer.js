@@ -27,11 +27,11 @@ buyProduct();
 function buyProduct() {
     connection.query('SELECT * FROM Products', function(err, res){
         console.log(res);
-        inquirer.prompt({
-            // ask user to choose ItemId of what he wants to buy
+        inquirer.prompt([{
+            // users chooses a product to purchase
             name: "choice",
             type: "rawlist",
-            message: "What would you like to bid on?",
+            message: "What would you like to buy?",
             choices: function(value) {
                 var choiceArray = [];
                 for (var i = 0; i < res.length; i++) {
@@ -39,44 +39,67 @@ function buyProduct() {
                 }
                 return choiceArray;
             }
-        }).then(function(answer) {
+        }, {
+            name: "quantity",
+            type: "input",
+            message: "How many would you like to buy?",
+            validate: function(value) {
+                if (isNaN(value) == false) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }]).then(function(answer) {
+            // grabs the entire object for the product the user chose
             for (var i = 0; i < res.length; i++) {
                 if (res[i].ProductName == answer.choice) {
                     var chosenItem = res[i];
-                    inquire.prompt({
-                        name: "quantity",
-                        type: "input",
-                        message: "How many would you like to bid on?",
-                        validate: function(value) {
-                            if (isNaN(value) == false) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    }).then(function(answer) {
-                        var updateStock = parseInt(chosenItem.StockQuantity) - parseInt(answer.quantity);
-                        if (chosenItem.StockQuantity >= parseInt(answer.quantity)) {
-                            connection.query("UPDATE Products SET ? WHERE ?", [{StockQuantity: updateStock}, {ItemId: chosenItem.ItemId}], function(err, res) {
-                                console.log("Bid placed successfully!");
-                            });
-                        }
-                        else {
-                            console.log("Insufficient quantity!");
-                        }
-                        console.log(res);
-                    }); // line 55
-                } // line 42
-            } // line 41
-        }); // line 40
-    }); // line 26
-} // line 25
+                }
+            }
+                             
+            var updateStock = parseInt(chosenItem.StockQuantity) - parseInt(answer.quantity);
+            if (chosenItem.StockQuantity < parseInt(answer.quantity)) {
+                console.log("Insufficient quantity!");
+
+                again();
+            }
+            else {
+                connection.query("UPDATE Products SET ? WHERE ?", [{StockQuantity: updateStock}, {ItemId: chosenItem.ItemId}], function(err, res) {
+                    console.log("Purchase successful!");
+
+                    var Total = (parseInt(answer.quantity)*chosenItem.Price).toFixed(2);
+                    console.log("Your total is $" + Total);
+
+                    again();
+                });
+            }
+
+        }); // .then of inquirer prompt
+                         
+    }); // first connection.query of the database
+    
+} // buyProduct function
 
 
 
 
-// I'm going to try removing the for loop in the promise to see if the code will stop throwing an error
-
+function again() {
+    inquirer.prompt({
+        // ask user if he wants to purchase another item
+        name: "repurchase",
+        type: "list",
+        choices: ["Yes", "No"],
+        message: "Would you like to purchase another item?"
+    }).then(function(answer) {
+        if (answer.repurchase == "Yes") {
+            buyProduct();
+        }
+        else {
+            console.log("Thanks for shopping for us. Have a great day!")
+        }
+    });
+}
 
 
 
