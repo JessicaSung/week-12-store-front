@@ -27,8 +27,9 @@ buyProduct();
 function buyProduct() {
     connection.query('SELECT * FROM Products', function(err, res){
         console.log(res);
+        // console.log(); -----------------------
         inquirer.prompt([{
-            // users chooses a product to purchase
+            // ask user to choose a product to purchase
             name: "choice",
             type: "rawlist",
             message: "What would you like to buy?",
@@ -40,6 +41,7 @@ function buyProduct() {
                 return choiceArray;
             }
         }, {
+            // ask user to enter a quantity to purchase
             name: "quantity",
             type: "input",
             message: "How many would you like to buy?",
@@ -57,13 +59,19 @@ function buyProduct() {
                     var chosenItem = res[i];
                 }
             }
+            // shows the entire object of the product chosen
+            // console.log(chosenItem);
                              
+            // calculate remaining stock if purchase occurs
             var updateStock = parseInt(chosenItem.StockQuantity) - parseInt(answer.quantity);
+
+            // if customer wants to purchase more than available in stock, user will be asked if he wants to make another purchase
             if (chosenItem.StockQuantity < parseInt(answer.quantity)) {
                 console.log("Insufficient quantity!");
 
                 again();
             }
+            // if the customer wants to purchase an amount that is in stock, the remaining stock quantity will be updated in the database and the price presented to the customer
             else {
                 connection.query("UPDATE Products SET ? WHERE ?", [{StockQuantity: updateStock}, {ItemId: chosenItem.ItemId}], function(err, res) {
                     console.log("Purchase successful!");
@@ -100,41 +108,3 @@ function again() {
         }
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
