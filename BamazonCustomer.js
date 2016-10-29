@@ -26,8 +26,15 @@ buyProduct();
 // Step 8 - displays products in database table, and then ask user which product he wants to purchase - write hoisted functions so they can be defined later in the file
 function buyProduct() {
     connection.query('SELECT * FROM Products', function(err, res){
-        console.log(res);
-        // console.log(); -----------------------
+        // console.log(res);
+
+        // display products and price to user
+        for (var i = 0; i < res.length; i++) {
+            console.log('Item: ' + res[i].ProductName + ' | Price: ' + res[i].Price + ' | Stock: ' + res[i].StockQuantity);
+        }
+        
+
+        // ask user questions for purchase 
         inquirer.prompt([{
             // ask user to choose a product to purchase
             name: "choice",
