@@ -1,0 +1,30 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "command-line shopping app",
+  "main": "BamazonCustomer.js",
+  "dependencies": {
+    "inquirer": "^1.2.3",
+    "mysql": "^2.12.0",
+    "prompt": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JessicaSung/week-12-store-front.git"
+  },
+  "keywords": [
+    "inquirer",
+    "mysql",
+    "prompt"
+  ],
+  "author": "Jessica Sung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JessicaSung/week-12-store-front/issues"
+  },
+  "homepage": "https://github.com/JessicaSung/week-12-store-front#readme"
+}
