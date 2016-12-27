@@ -3,14 +3,14 @@ var mysql = require('mysql');
 var inquirer = require('inquirer');
 var prompt = require('prompt');
 var filesystem = require('fs');
-var sqlPassword = require('./password.js');
+// var sqlPassword = require('./password.js');
 
 // Step 5 - create database in MySQL workbench and then create the connection here
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root", 
-    password: sqlPassword, 
+    password: "", 
     database: "Bamazon"
 });
 
